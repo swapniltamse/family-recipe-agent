@@ -137,7 +137,7 @@ async function getRecipe() {
       },
       body: JSON.stringify({
         model: CONFIG.model,
-        max_tokens: 1500,
+        max_tokens: 2048,
         stream: true,
         system: buildSystemPrompt(selectedMember),
         messages: [{ role: 'user', content: userMessage }]
@@ -166,7 +166,7 @@ async function getRecipe() {
           const evt = JSON.parse(raw);
           if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
             currentRecipeText += evt.delta.text;
-            recipeEl.textContent = currentRecipeText;
+            recipeEl.innerHTML = marked.parse(currentRecipeText);
           }
         } catch (_) {}
       }

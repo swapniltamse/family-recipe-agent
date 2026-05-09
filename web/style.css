@@ -223,6 +223,30 @@ input[type="text"]::placeholder { color: #B09080; }
 /* ── Screen 3: Result ── */
 .result-header { margin-bottom: 24px; }
 
+/* ── Markdown inside recipe box ── */
+.recipe-content h1,
+.recipe-content h2,
+.recipe-content h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--terracotta);
+  margin: 16px 0 8px;
+  font-size: 1rem;
+}
+.recipe-content h1 { font-size: 1.15rem; }
+.recipe-content ul,
+.recipe-content ol {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+.recipe-content li { margin: 4px 0; }
+.recipe-content strong { color: var(--dark); }
+.recipe-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 12px 0;
+}
+.recipe-content p { margin: 8px 0; }
+
 .recipe-content {
   background: var(--card-bg);
   border: 1.5px solid var(--border);
