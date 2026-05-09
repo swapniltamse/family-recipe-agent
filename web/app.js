@@ -25,6 +25,27 @@ function updateCreditsBadge() {
   else if (remaining <= 5) badge.classList.add('low');
 }
 
+/* ── Dark mode ── */
+function initTheme() {
+  if (localStorage.getItem('theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = 'Light';
+  }
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    document.documentElement.removeAttribute('data-theme');
+    document.getElementById('theme-toggle').textContent = 'Dark';
+    localStorage.setItem('theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = 'Light';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('family-name').textContent = FAMILY_DATA.familyName;
@@ -32,6 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderMemberCards();
   bindNavigation();
   updateCreditsBadge();
+  initTheme();
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 });
 
 /* ── Screen management ── */

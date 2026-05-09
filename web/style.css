@@ -11,6 +11,16 @@
   --shadow:     0 2px 12px rgba(44,24,16,0.08);
 }
 
+/* ── Dark mode ── */
+[data-theme="dark"] {
+  --cream:   #1C1410;
+  --card-bg: #2A1E16;
+  --dark:    #F0E4D0;
+  --mid:     #C4956A;
+  --border:  #4A3428;
+  --shadow:  0 2px 12px rgba(0,0,0,0.4);
+}
+
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -30,6 +40,24 @@ h1, h2, h3 {
   font-weight: 600;
   line-height: 1.2;
 }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  position: fixed;
+  top: 14px;
+  left: 16px;
+  font-size: 0.75rem;
+  color: var(--mid);
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  z-index: 100;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.2s, color 0.2s;
+}
+.theme-toggle:hover { color: var(--terracotta); border-color: var(--terracotta); }
 
 /* ── Credits badge ── */
 .credits-badge {
@@ -78,6 +106,14 @@ h1, h2, h3 {
   color: var(--mid);
   margin-bottom: 12px;
   font-size: 1rem;
+}
+
+.explainer {
+  text-align: center;
+  color: var(--dark);
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 8px;
 }
 
 .disclaimer {
