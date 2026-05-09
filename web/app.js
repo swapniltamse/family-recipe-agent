@@ -95,7 +95,7 @@ async function streamInto(messages, targetEl, onChunk) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       model: CONFIG.model,
-      max_tokens: 2048,
+      max_tokens: 4096,
       stream: true,
       system: buildSystemPrompt(selectedMember),
       messages
