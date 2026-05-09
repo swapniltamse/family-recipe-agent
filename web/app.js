@@ -1,6 +1,7 @@
 /* ── State ── */
 let selectedMember = null;
 let currentRecipeText = '';
+let conversationHistory = [];
 
 /* ── Session limit ── */
 const SESSION_LIMIT = 10;
@@ -58,6 +59,7 @@ function renderMemberCards() {
 
 function selectMember(member) {
   selectedMember = member;
+  conversationHistory = [];
   document.getElementById('member-heading').textContent = member.name + "'s Kitchen";
   document.getElementById('memory-input').value = '';
   document.getElementById('people-count').value = '';
@@ -82,7 +84,53 @@ Cooking style: ${member.style}
 The user will describe a dish from memory. Reconstruct the full recipe from that description.
 Provide: ingredients with quantities, step-by-step method, what to pair it with, one tip specific to ${member.name}'s style.
 If the description is vague, state your assumptions clearly at the top.
+For follow-up messages, help the user adjust the recipe — swap ingredients, change quantities, simplify steps, or answer questions. Keep responses focused and practical.
 End with: "Does this sound right? Tell me what to adjust."`;
+}
+
+/* ── Shared streaming function ── */
+async function streamInto(messages, targetEl, onChunk) {
+  const response = await fetch('/api/messages', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      model: CONFIG.model,
+      max_tokens: 2048,
+      stream: true,
+      system: buildSystemPrompt(selectedMember),
+      messages
+    })
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error ${response.status}`);
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let text = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const lines = decoder.decode(value, { stream: true }).split('\n');
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const raw = line.slice(6).trim();
+      if (!raw || raw === '[DONE]') continue;
+      try {
+        const evt = JSON.parse(raw);
+        if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+          text += evt.delta.text;
+          targetEl.innerHTML = marked.parse(text);
+          if (onChunk) onChunk(text);
+        }
+      } catch (_) {}
+    }
+  }
+
+  return text;
 }
 
 /* ── Get Recipe ── */
@@ -90,6 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('get-recipe-btn').addEventListener('click', getRecipe);
   document.getElementById('memory-input').addEventListener('keydown', e => {
     if (e.key === 'Enter' && e.metaKey) getRecipe();
+  });
+  document.getElementById('followup-btn').addEventListener('click', sendFollowUp);
+  document.getElementById('followup-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendFollowUp();
   });
 });
 
@@ -103,8 +155,9 @@ async function getRecipe() {
   if (getPromptCount() >= SESSION_LIMIT) {
     document.getElementById('result-member-name').textContent = selectedMember.name + "'s Kitchen";
     document.getElementById('recipe-content').textContent =
-      `This demo allows ${SESSION_LIMIT} recipes per session.\n\nTo use it for your own family, clone the project and add your own Claude API key:\ngithub.com/swapniltamse/mhardolkar-family-recipe-agent`;
+      `This demo allows ${SESSION_LIMIT} recipes per session. To use it for your own family, clone the project and add your own Claude API key:\ngithub.com/swapniltamse/mhardolkar-family-recipe-agent`;
     document.getElementById('result-actions').classList.add('hidden');
+    document.getElementById('followup-section').classList.add('hidden');
     document.getElementById('loading').classList.add('hidden');
     showScreen('result');
     return;
@@ -117,63 +170,31 @@ async function getRecipe() {
   if (people) userMessage += `\n\nFor ${people} people.`;
   if (occasion) userMessage += `\nOccasion: ${occasion}.`;
 
-  // Switch to result screen
+  conversationHistory = [{ role: 'user', content: userMessage }];
+
   document.getElementById('result-member-name').textContent = selectedMember.name + "'s Kitchen";
   currentRecipeText = '';
-  document.getElementById('recipe-content').textContent = '';
+  document.getElementById('recipe-content').innerHTML = '';
   document.getElementById('result-actions').classList.add('hidden');
+  document.getElementById('followup-section').classList.add('hidden');
   document.getElementById('loading').classList.remove('hidden');
   showScreen('result');
 
-  // Disable button during fetch
   const btn = document.getElementById('get-recipe-btn');
   btn.disabled = true;
 
   try {
-    const response = await fetch('/api/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: CONFIG.model,
-        max_tokens: 2048,
-        stream: true,
-        system: buildSystemPrompt(selectedMember),
-        messages: [{ role: 'user', content: userMessage }]
-      })
-    });
-
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err.error?.message || `API error ${response.status}`);
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
     const recipeEl = document.getElementById('recipe-content');
     document.getElementById('loading').classList.add('hidden');
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const lines = decoder.decode(value, { stream: true }).split('\n');
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        const raw = line.slice(6).trim();
-        if (!raw || raw === '[DONE]') continue;
-        try {
-          const evt = JSON.parse(raw);
-          if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
-            currentRecipeText += evt.delta.text;
-            recipeEl.innerHTML = marked.parse(currentRecipeText);
-          }
-        } catch (_) {}
-      }
-    }
+    const text = await streamInto(conversationHistory, recipeEl);
+    currentRecipeText = text;
+    conversationHistory.push({ role: 'assistant', content: text });
 
     incrementPromptCount();
     document.getElementById('result-actions').classList.remove('hidden');
+    document.getElementById('followup-section').classList.remove('hidden');
+    document.getElementById('followup-input').focus();
 
   } catch (err) {
     document.getElementById('loading').classList.add('hidden');
@@ -181,6 +202,45 @@ async function getRecipe() {
       `Something went wrong: ${err.message}\n\nCheck your API key in web/config.js`;
   } finally {
     btn.disabled = false;
+  }
+}
+
+/* ── Follow-up chat ── */
+async function sendFollowUp() {
+  const input = document.getElementById('followup-input');
+  const text = input.value.trim();
+  if (!text || !selectedMember) return;
+
+  const followupBtn = document.getElementById('followup-btn');
+  followupBtn.disabled = true;
+  input.value = '';
+
+  conversationHistory.push({ role: 'user', content: text });
+
+  const recipeEl = document.getElementById('recipe-content');
+
+  // Append user question
+  const questionEl = document.createElement('div');
+  questionEl.className = 'followup-question';
+  questionEl.textContent = text;
+  recipeEl.appendChild(questionEl);
+
+  // Append streaming response container
+  const responseEl = document.createElement('div');
+  responseEl.className = 'followup-response';
+  recipeEl.appendChild(responseEl);
+
+  // Scroll to new content
+  responseEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  try {
+    const responseText = await streamInto(conversationHistory, responseEl);
+    conversationHistory.push({ role: 'assistant', content: responseText });
+  } catch (err) {
+    responseEl.textContent = `Something went wrong: ${err.message}`;
+  } finally {
+    followupBtn.disabled = false;
+    input.focus();
   }
 }
 
@@ -195,10 +255,11 @@ function saveAsPDF() {
 }
 
 function saveAsTXT() {
-  if (!currentRecipeText) return;
+  const content = document.getElementById('recipe-content').innerText;
+  if (!content) return;
   const memberSlug = selectedMember.skill_id || selectedMember.name.toLowerCase().replace(/\s+/g, '-');
   const filename = `${memberSlug}-recipe.txt`;
-  const blob = new Blob([currentRecipeText], { type: 'text/plain; charset=utf-8' });
+  const blob = new Blob([content], { type: 'text/plain; charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
