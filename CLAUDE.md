@@ -1,4 +1,4 @@
-# Tamse Family Recipes — Claude Code Context
+# Mhardolkar Family Recipes — Claude Code Context
 
 ## Family Overview
 **Cuisines:** Maharashtrian, Karwarian, Indian
