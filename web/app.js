@@ -48,3 +48,107 @@ function bindNavigation() {
   document.getElementById('back-to-input').addEventListener('click', () => showScreen('input'));
   document.getElementById('try-another-btn').addEventListener('click', () => showScreen('picker'));
 }
+
+/* ── System prompt builder ── */
+function buildSystemPrompt(member) {
+  return `You are a recipe assistant trained on ${member.name}'s kitchen.
+Cuisine: ${FAMILY_DATA.cuisines.join(', ')}
+Specialties: ${member.specialties.join(', ')}
+Cooking style: ${member.style}
+
+The user will describe a dish from memory. Reconstruct the full recipe from that description.
+Provide: ingredients with quantities, step-by-step method, what to pair it with, one tip specific to ${member.name}'s style.
+If the description is vague, state your assumptions clearly at the top.
+End with: "Does this sound right? Tell me what to adjust."`;
+}
+
+/* ── Get Recipe ── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('get-recipe-btn').addEventListener('click', getRecipe);
+  document.getElementById('memory-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.metaKey) getRecipe();
+  });
+});
+
+async function getRecipe() {
+  const memory = document.getElementById('memory-input').value.trim();
+  if (!memory) {
+    document.getElementById('memory-input').focus();
+    return;
+  }
+
+  const people = document.getElementById('people-count').value.trim();
+  const occasion = document.getElementById('occasion').value.trim();
+
+  let userMessage = memory;
+  if (people) userMessage += `\n\nFor ${people} people.`;
+  if (occasion) userMessage += `\nOccasion: ${occasion}.`;
+
+  // Switch to result screen
+  document.getElementById('result-member-name').textContent = selectedMember.name + "'s Kitchen";
+  currentRecipeText = '';
+  document.getElementById('recipe-content').textContent = '';
+  document.getElementById('result-actions').classList.add('hidden');
+  document.getElementById('loading').classList.remove('hidden');
+  showScreen('result');
+
+  // Disable button during fetch
+  const btn = document.getElementById('get-recipe-btn');
+  btn.disabled = true;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': CONFIG.apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-allow-browser': 'true'
+      },
+      body: JSON.stringify({
+        model: CONFIG.model,
+        max_tokens: 1500,
+        stream: true,
+        system: buildSystemPrompt(selectedMember),
+        messages: [{ role: 'user', content: userMessage }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${response.status}`);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    const recipeEl = document.getElementById('recipe-content');
+    document.getElementById('loading').classList.add('hidden');
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const lines = decoder.decode(value, { stream: true }).split('\n');
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const raw = line.slice(6).trim();
+        if (!raw || raw === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(raw);
+          if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+            currentRecipeText += evt.delta.text;
+            recipeEl.textContent = currentRecipeText;
+          }
+        } catch (_) {}
+      }
+    }
+
+    document.getElementById('result-actions').classList.remove('hidden');
+
+  } catch (err) {
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('recipe-content').textContent =
+      `Something went wrong: ${err.message}\n\nCheck your API key in web/config.js`;
+  } finally {
+    btn.disabled = false;
+  }
+}
