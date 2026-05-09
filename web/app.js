@@ -84,6 +84,8 @@ Cooking style: ${member.style}
 The user will describe a dish from memory. Reconstruct the full recipe from that description.
 If the description is vague, state your assumptions in one short line at the top.
 
+Be concise. Total response must be under 400 words. No preamble, no repetition.
+
 Always use this exact format — no tables, no variations:
 
 ## [Dish Name]
@@ -138,7 +140,7 @@ async function streamInto(messages, targetEl, onChunk) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       model: CONFIG.model,
-      max_tokens: 4096,
+      max_tokens: 2048,
       stream: true,
       system: buildSystemPrompt(selectedMember),
       messages
@@ -160,27 +162,29 @@ async function streamInto(messages, targetEl, onChunk) {
   targetEl.style.whiteSpace = 'pre-wrap';
   targetEl.textContent = '';
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    const lines = decoder.decode(value, { stream: true }).split('\n');
-    for (const line of lines) {
-      if (!line.startsWith('data: ')) continue;
-      const raw = line.slice(6).trim();
-      if (!raw || raw === '[DONE]') continue;
-      try {
-        const evt = JSON.parse(raw);
-        if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
-          text += evt.delta.text;
-          targetEl.textContent = text;
-        }
-      } catch (_) {}
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const lines = decoder.decode(value, { stream: true }).split('\n');
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const raw = line.slice(6).trim();
+        if (!raw || raw === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(raw);
+          if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+            text += evt.delta.text;
+            targetEl.textContent = text;
+          }
+        } catch (_) {}
+      }
     }
+  } finally {
+    // Always render markdown — even if stream was cut off mid-way
+    targetEl.style.whiteSpace = '';
+    if (text) targetEl.innerHTML = marked.parse(text);
   }
-
-  // Render markdown once stream is complete
-  targetEl.style.whiteSpace = '';
-  targetEl.innerHTML = marked.parse(text);
 
   return text;
 }
