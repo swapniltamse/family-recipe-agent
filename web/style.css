@@ -52,8 +52,17 @@ h1, h2, h3 {
 .subtitle {
   text-align: center;
   color: var(--mid);
-  margin-bottom: 32px;
+  margin-bottom: 12px;
   font-size: 1rem;
+}
+
+.disclaimer {
+  text-align: center;
+  color: var(--mid);
+  font-size: 0.78rem;
+  font-style: italic;
+  margin-bottom: 32px;
+  opacity: 0.75;
 }
 
 .cards-grid {
