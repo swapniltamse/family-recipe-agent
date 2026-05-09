@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Family Recipes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- Screen 1: Kitchen Picker -->
+    <div id="screen-picker" class="screen active">
+      <h1 id="family-name" class="family-title"></h1>
+      <div class="accent-line"></div>
+      <p class="subtitle">Whose kitchen today?</p>
+      <div id="member-cards" class="cards-grid"></div>
+    </div>
+
+    <!-- Screen 2: Memory Input -->
+    <div id="screen-input" class="screen">
+      <button class="back-btn" id="back-to-picker">← All kitchens</button>
+      <h2 id="member-heading" class="kitchen-title"></h2>
+      <div class="accent-line"></div>
+      <div class="input-form">
+        <textarea
+          id="memory-input"
+          rows="5"
+          placeholder="My mom used to make it with just rava, onions, and coconut..."
+        ></textarea>
+        <div class="optional-fields">
+          <input type="text" id="people-count" placeholder="How many people? (optional)">
+          <input type="text" id="occasion" placeholder="What occasion? (optional)">
+        </div>
+        <button class="primary-btn" id="get-recipe-btn">Get the recipe</button>
+      </div>
+    </div>
+
+    <!-- Screen 3: Recipe Result -->
+    <div id="screen-result" class="screen">
+      <button class="back-btn" id="back-to-input">← Try a different dish</button>
+      <h2 id="result-member-name" class="kitchen-title"></h2>
+      <div class="accent-line"></div>
+      <div class="loading hidden" id="loading">Finding your recipe...</div>
+      <div id="recipe-content" class="recipe-content"></div>
+      <div id="result-actions" class="result-actions hidden">
+        <button class="action-btn" id="save-pdf-btn">Save as PDF</button>
+        <button class="action-btn" id="save-txt-btn">Save as TXT</button>
+        <button class="secondary-btn" id="try-another-btn">Try another kitchen</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="config.js"></script>
+  <script src="family-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
