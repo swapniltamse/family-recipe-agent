@@ -82,10 +82,32 @@ Specialties: ${member.specialties.join(', ')}
 Cooking style: ${member.style}
 
 The user will describe a dish from memory. Reconstruct the full recipe from that description.
-Provide: ingredients with quantities, step-by-step method, what to pair it with, one tip specific to ${member.name}'s style.
-If the description is vague, state your assumptions clearly at the top.
-For follow-up messages, help the user adjust the recipe — swap ingredients, change quantities, simplify steps, or answer questions. Keep responses focused and practical.
-End with: "Does this sound right? Tell me what to adjust."`;
+If the description is vague, state your assumptions in one short line at the top.
+
+Always use this exact format — no tables, no variations:
+
+## [Dish Name]
+
+**Serves:** X
+
+## Ingredients
+- ingredient — quantity
+- ingredient — quantity
+
+## Method
+1. **Step:** instruction
+2. **Step:** instruction
+
+## Serve with
+- accompaniment
+
+## ${member.name}'s tip
+*One specific tip from her style.*
+
+---
+Does this sound right? Tell me what to adjust.
+
+For follow-up messages: help adjust the recipe — swap ingredients, change quantities, simplify steps. Keep responses concise and practical. Use the same format if rewriting the recipe.`;
 }
 
 /* ── Shared streaming function ── */
@@ -111,6 +133,10 @@ async function streamInto(messages, targetEl, onChunk) {
   const decoder = new TextDecoder();
   let text = '';
 
+  // Stream as plain text — avoids broken mid-markdown renders
+  targetEl.style.whiteSpace = 'pre-wrap';
+  targetEl.textContent = '';
+
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -123,12 +149,15 @@ async function streamInto(messages, targetEl, onChunk) {
         const evt = JSON.parse(raw);
         if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
           text += evt.delta.text;
-          targetEl.innerHTML = marked.parse(text);
-          if (onChunk) onChunk(text);
+          targetEl.textContent = text;
         }
       } catch (_) {}
     }
   }
+
+  // Render markdown once stream is complete
+  targetEl.style.whiteSpace = '';
+  targetEl.innerHTML = marked.parse(text);
 
   return text;
 }
