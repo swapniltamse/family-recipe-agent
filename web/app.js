@@ -11,6 +11,17 @@ function getPromptCount() {
 
 function incrementPromptCount() {
   sessionStorage.setItem('recipeCount', String(getPromptCount() + 1));
+  updateCreditsBadge();
+}
+
+function updateCreditsBadge() {
+  const remaining = SESSION_LIMIT - getPromptCount();
+  const badge = document.getElementById('credits-badge');
+  if (!badge) return;
+  badge.textContent = remaining + ' recipe' + (remaining === 1 ? '' : 's') + ' left';
+  badge.className = 'credits-badge';
+  if (remaining <= 2) badge.classList.add('critical');
+  else if (remaining <= 5) badge.classList.add('low');
 }
 
 /* ── Init ── */
@@ -19,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.title = FAMILY_DATA.familyName;
   renderMemberCards();
   bindNavigation();
+  updateCreditsBadge();
 });
 
 /* ── Screen management ── */

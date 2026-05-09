@@ -31,6 +31,30 @@ h1, h2, h3 {
   line-height: 1.2;
 }
 
+/* ── Credits badge ── */
+.credits-badge {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  font-size: 0.75rem;
+  color: var(--mid);
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  z-index: 100;
+  transition: border-color 0.2s, color 0.2s;
+}
+.credits-badge.low {
+  color: #C17A00;
+  border-color: #E8A020;
+}
+.credits-badge.critical {
+  color: var(--terracotta);
+  border-color: var(--terracotta);
+  font-weight: 600;
+}
+
 /* ── App Shell ── */
 #app {
   max-width: 640px;
