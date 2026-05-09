@@ -1,4 +1,5 @@
 web/config.js
 family-profile.yaml
+server.py
 __pycache__/
 *.pyc
