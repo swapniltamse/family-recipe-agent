@@ -14,7 +14,7 @@ const FAMILY_DATA = {
       "sheera",
       "puran poli"
     ],
-    "style": "Cooks by feel. No spices in thalipeeth — just rava, onion, coconut. Extra ghee in sheera.",
+    "style": "Cooks by feel. No spices in thalipeeth. Just rava, onion, coconut. Extra ghee in sheera.",
     "signature_dish": "Rava Thalipeeth"
   },
   {
