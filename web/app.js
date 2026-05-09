@@ -2,6 +2,17 @@
 let selectedMember = null;
 let currentRecipeText = '';
 
+/* ── Session limit ── */
+const SESSION_LIMIT = 10;
+
+function getPromptCount() {
+  return parseInt(sessionStorage.getItem('recipeCount') || '0', 10);
+}
+
+function incrementPromptCount() {
+  sessionStorage.setItem('recipeCount', String(getPromptCount() + 1));
+}
+
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('family-name').textContent = FAMILY_DATA.familyName;
@@ -77,6 +88,16 @@ async function getRecipe() {
     return;
   }
 
+  if (getPromptCount() >= SESSION_LIMIT) {
+    document.getElementById('result-member-name').textContent = selectedMember.name + "'s Kitchen";
+    document.getElementById('recipe-content').textContent =
+      `This demo allows ${SESSION_LIMIT} recipes per session.\n\nTo use it for your own family, clone the project and add your own Claude API key:\ngithub.com/swapniltamse/mhardolkar-family-recipe-agent`;
+    document.getElementById('result-actions').classList.add('hidden');
+    document.getElementById('loading').classList.add('hidden');
+    showScreen('result');
+    return;
+  }
+
   const people = document.getElementById('people-count').value.trim();
   const occasion = document.getElementById('occasion').value.trim();
 
@@ -97,13 +118,10 @@ async function getRecipe() {
   btn.disabled = true;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('/api/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': CONFIG.apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-        'anthropic-dangerous-allow-browser': 'true'
+        'content-type': 'application/json'
       },
       body: JSON.stringify({
         model: CONFIG.model,
@@ -142,6 +160,7 @@ async function getRecipe() {
       }
     }
 
+    incrementPromptCount();
     document.getElementById('result-actions').classList.remove('hidden');
 
   } catch (err) {
