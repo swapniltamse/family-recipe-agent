@@ -46,7 +46,7 @@ members:
   - name: Baby Maushi
     skill_id: baby-maushi
     specialties:
-      - kheer
-      - Indian sweets
-    style: "Desserts. Always slightly too much sugar. People always ask for more."
-    signature_dish: "Kheer"
+      - fish curry
+      - chicken curry
+    style: "Karwarian coastal cooking. Fish and chicken done better than anyone else."
+    signature_dish: "Fish Curry"

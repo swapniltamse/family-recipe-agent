@@ -51,11 +51,11 @@ const FAMILY_DATA = {
     "name": "Baby Maushi",
     "skill_id": "baby-maushi",
     "specialties": [
-      "kheer",
-      "Indian sweets"
+      "fish curry",
+      "chicken curry"
     ],
-    "style": "Desserts. Always slightly too much sugar. People always ask for more.",
-    "signature_dish": "Kheer"
+    "style": "Karwarian coastal cooking. Fish and chicken done better than anyone else.",
+    "signature_dish": "Fish Curry"
   }
 ]
 };
