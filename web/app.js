@@ -152,3 +152,28 @@ async function getRecipe() {
     btn.disabled = false;
   }
 }
+
+/* ── Export ── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('save-pdf-btn').addEventListener('click', saveAsPDF);
+  document.getElementById('save-txt-btn').addEventListener('click', saveAsTXT);
+});
+
+function saveAsPDF() {
+  window.print();
+}
+
+function saveAsTXT() {
+  if (!currentRecipeText) return;
+  const memberSlug = selectedMember.skill_id || selectedMember.name.toLowerCase().replace(/\s+/g, '-');
+  const filename = `${memberSlug}-recipe.txt`;
+  const blob = new Blob([currentRecipeText], { type: 'text/plain; charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
