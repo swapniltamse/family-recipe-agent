@@ -133,15 +133,14 @@ function showQuotaError(targetEl) {
   `;
 }
 
-/* ── Shared streaming function ── */
-async function streamInto(messages, targetEl, onChunk) {
+/* ── Recipe fetch (non-streaming — avoids Vercel Edge 30s timeout) ── */
+async function fetchRecipe(messages, targetEl) {
   const response = await fetch('/api/messages', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       model: CONFIG.model,
       max_tokens: 2048,
-      stream: true,
       system: buildSystemPrompt(selectedMember),
       messages
     })
@@ -154,38 +153,9 @@ async function streamInto(messages, targetEl, onChunk) {
     throw error;
   }
 
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let text = '';
-
-  // Stream as plain text — avoids broken mid-markdown renders
-  targetEl.style.whiteSpace = 'pre-wrap';
-  targetEl.textContent = '';
-
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const lines = decoder.decode(value, { stream: true }).split('\n');
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        const raw = line.slice(6).trim();
-        if (!raw || raw === '[DONE]') continue;
-        try {
-          const evt = JSON.parse(raw);
-          if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
-            text += evt.delta.text;
-            targetEl.textContent = text;
-          }
-        } catch (_) {}
-      }
-    }
-  } finally {
-    // Always render markdown — even if stream was cut off mid-way
-    targetEl.style.whiteSpace = '';
-    if (text) targetEl.innerHTML = marked.parse(text);
-  }
-
+  const data = await response.json();
+  const text = data.content[0].text;
+  targetEl.innerHTML = marked.parse(text);
   return text;
 }
 
@@ -241,9 +211,9 @@ async function getRecipe() {
 
   try {
     const recipeEl = document.getElementById('recipe-content');
-    document.getElementById('loading').classList.add('hidden');
 
-    const text = await streamInto(conversationHistory, recipeEl);
+    const text = await fetchRecipe(conversationHistory, recipeEl);
+    document.getElementById('loading').classList.add('hidden');
     currentRecipeText = text;
     conversationHistory.push({ role: 'assistant', content: text });
 
@@ -283,16 +253,21 @@ async function sendFollowUp() {
   questionEl.textContent = text;
   recipeEl.appendChild(questionEl);
 
-  // Append streaming response container
+  // Append response container with placeholder
   const responseEl = document.createElement('div');
   responseEl.className = 'followup-response';
+  responseEl.style.color = 'var(--mid)';
+  responseEl.style.fontStyle = 'italic';
+  responseEl.textContent = 'Thinking...';
   recipeEl.appendChild(responseEl);
 
   // Scroll to new content
   responseEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   try {
-    const responseText = await streamInto(conversationHistory, responseEl);
+    const responseText = await fetchRecipe(conversationHistory, responseEl);
+    responseEl.style.color = '';
+    responseEl.style.fontStyle = '';
     conversationHistory.push({ role: 'assistant', content: responseText });
   } catch (err) {
     friendlyError(err) === '__QUOTA__'

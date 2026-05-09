@@ -33,6 +33,7 @@ export default async function handler(req) {
 
   // Model is set server-side — never trust the client for this
   body.model = process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001';
+  delete body.stream; // always non-streaming to avoid 30s Edge timeout
 
   const upstream = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -44,10 +45,11 @@ export default async function handler(req) {
     body: JSON.stringify(body),
   });
 
-  return new Response(upstream.body, {
+  const data = await upstream.json();
+  return new Response(JSON.stringify(data), {
     status: upstream.status,
     headers: {
-      'Content-Type': upstream.headers.get('Content-Type') || 'text/event-stream',
+      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
     },
   });
