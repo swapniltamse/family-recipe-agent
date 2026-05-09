@@ -110,6 +110,27 @@ Does this sound right? Tell me what to adjust.
 For follow-up messages: help adjust the recipe — swap ingredients, change quantities, simplify steps. Keep responses concise and practical. Use the same format if rewriting the recipe.`;
 }
 
+/* ── Friendly error messages ── */
+function friendlyError(err) {
+  const status = err.status;
+  const msg = (err.message || '').toLowerCase();
+  if (status === 429 || status === 402 || msg.includes('rate limit') || msg.includes('quota') || msg.includes('credit')) {
+    return `__QUOTA__`;
+  }
+  return `Something went wrong. Please try again in a moment.`;
+}
+
+function showQuotaError(targetEl) {
+  targetEl.innerHTML = `
+    <div class="quota-error">
+      <img src="bai.jpg" alt="Itne paise mein itna hi milega" class="quota-img">
+      <p class="quota-text">This demo has reached its limit for today.</p>
+      <p class="quota-sub">Come back tomorrow, or build your own version for your family.</p>
+      <a href="https://github.com/swapniltamse/mhardolkar-family-recipe-agent" class="quota-link" target="_blank">Clone on GitHub</a>
+    </div>
+  `;
+}
+
 /* ── Shared streaming function ── */
 async function streamInto(messages, targetEl, onChunk) {
   const response = await fetch('/api/messages', {
@@ -126,7 +147,9 @@ async function streamInto(messages, targetEl, onChunk) {
 
   if (!response.ok) {
     const err = await response.json().catch(() => ({}));
-    throw new Error(err.error?.message || `API error ${response.status}`);
+    const error = new Error(err.error?.message || `API error ${response.status}`);
+    error.status = response.status;
+    throw error;
   }
 
   const reader = response.body.getReader();
@@ -228,7 +251,9 @@ async function getRecipe() {
   } catch (err) {
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('recipe-content').textContent =
-      `Something went wrong: ${err.message}\n\nCheck your API key in web/config.js`;
+      friendlyError(err) === '__QUOTA__'
+        ? showQuotaError(document.getElementById('recipe-content'))
+        : document.getElementById('recipe-content').textContent = friendlyError(err);
   } finally {
     btn.disabled = false;
   }
@@ -266,7 +291,9 @@ async function sendFollowUp() {
     const responseText = await streamInto(conversationHistory, responseEl);
     conversationHistory.push({ role: 'assistant', content: responseText });
   } catch (err) {
-    responseEl.textContent = `Something went wrong: ${err.message}`;
+    friendlyError(err) === '__QUOTA__'
+      ? showQuotaError(responseEl)
+      : responseEl.textContent = friendlyError(err);
   } finally {
     followupBtn.disabled = false;
     input.focus();
