@@ -23,7 +23,7 @@ Browser → /api/messages (Vercel or server.py) → Anthropic API
 ## What you need
 
 - Python 3.7+
-- A Claude API key — get one at [console.anthropic.com](https://console.anthropic.com) (pay per use, a recipe costs ~$0.001)
+- A Claude API key. Get one at [console.anthropic.com](https://console.anthropic.com) (pay per use, a recipe costs ~$0.001)
 - A browser
 
 ---
@@ -43,7 +43,7 @@ pip install pyyaml
 
 **3. Fill in your family**
 
-Copy `family-profile.example.yaml` to `family-profile.yaml` and edit it. Add each family member — their name, location, specialties, cooking style, and tags.
+Copy `family-profile.example.yaml` to `family-profile.yaml` and edit it. Add each family member: their name, location, specialties, cooking style, and tags.
 
 **4. Generate the web config**
 ```bash
@@ -85,20 +85,20 @@ Vercel runs the `/api/messages` proxy automatically. No server setup needed.
 3. Add `ANTHROPIC_API_KEY` in Vercel → Settings → Environment Variables
 4. Deploy
 
-Your family URL is live. Share it with family members — no installs, no accounts.
+Your family URL is live. Share it with family members. No installs, no accounts.
 
 ---
 
 ## Features
 
-- **Kitchen picker** — each family member gets her own card with tags (cuisine, specialties)
-- **Memory input** — describe a dish, optionally add serving size and occasion
-- **Recipe output** — formatted in markdown with ingredients, method, serving suggestions, and a personal tip from that kitchen
-- **Follow-up chat** — adjust the recipe inline: swap ingredients, change quantities, simplify steps
-- **Save as PDF** — browser print dialog, formatted for paper
-- **Save as TXT** — plain text download
-- **Dark mode** — persists across sessions
-- **Share button** — Web Share API with clipboard fallback
+- **Kitchen picker**: each family member gets her own card with cuisine tags
+- **Memory input**: describe a dish, optionally add serving size and occasion
+- **Recipe output**: formatted with ingredients, method, serving suggestions, and a personal tip from that kitchen
+- **Follow-up chat**: adjust the recipe inline, swap ingredients, change quantities, simplify steps
+- **Save as PDF**: browser print dialog, formatted for paper
+- **Save as TXT**: plain text download
+- **Dark mode**: persists across sessions
+- **Share button**: Web Share API with clipboard fallback
 
 ---
 
@@ -116,4 +116,4 @@ If you use Claude Code, the generated skills let you query recipes directly in y
 
 Your family profile stays on your machine. Recipe queries go to Anthropic's API with your key. See [Anthropic's privacy policy](https://www.anthropic.com/privacy).
 
-The API key is stored as an environment variable — never in the browser, never in git.
+The API key is stored as an environment variable. It never touches the browser or git.
