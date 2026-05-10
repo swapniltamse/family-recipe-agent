@@ -92,7 +92,7 @@ function initAnalytics() {
 async function shareApp() {
   const btn = document.getElementById('share-btn');
   const url = 'https://familyrecipe.swapniltamse.com';
-  const text = 'Describe a dish from memory. Get the recipe back. Built for the Mhaddolkar family.';
+  const text = 'Describe a dish from memory. Get the recipe back. Built for the Mhaddolkar sisters recipes.';
 
   if (navigator.share) {
     try {

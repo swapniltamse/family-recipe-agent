@@ -1,7 +1,7 @@
 # Copy this file to family-profile.yaml and fill in your family's details.
 # Each member gets their own agent. Run setup.py after editing.
 
-family_name: "Mhaddolkar Family Recipes"
+family_name: "Mhaddolkar Sisters Recipes"
 
 cuisines:
   - Maharashtrian
