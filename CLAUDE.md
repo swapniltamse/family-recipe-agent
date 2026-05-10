@@ -1,4 +1,4 @@
-# Mhardolkar Family Recipes — Claude Code Context
+# Mhaddolkar Family Recipes — Claude Code Context
 
 ## Family Overview
 **Cuisines:** Maharashtrian, Karwarian, Indian

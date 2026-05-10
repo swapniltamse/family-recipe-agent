@@ -2,7 +2,7 @@
 // Edit family-profile.yaml and re-run: python setup.py
 
 const FAMILY_DATA = {
-  familyName: "Mhardolkar Family Recipes",
+  familyName: "Mhaddolkar Family Recipes",
   cuisines: ["Maharashtrian", "Karwarian", "Indian"],
   members: [
   {
