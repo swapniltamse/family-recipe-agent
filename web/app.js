@@ -267,7 +267,7 @@ async function getRecipe() {
   if (getPromptCount() >= SESSION_LIMIT) {
     document.getElementById('result-member-name').textContent = selectedMember.name + "'s Kitchen";
     document.getElementById('recipe-content').textContent =
-      `This demo allows ${SESSION_LIMIT} recipes per session. To use it for your own family, clone the project and add your own Claude API key:\ngithub.com/swapniltamse/mhardolkar-family-recipe-agent`;
+      `You have used all ${SESSION_LIMIT} recipes for this session. Open the app in an incognito window to start fresh.\n\nTo build one for your own family:\ngithub.com/swapniltamse/mhardolkar-family-recipe-agent`;
     document.getElementById('result-actions').classList.add('hidden');
     document.getElementById('followup-section').classList.add('hidden');
     document.getElementById('loading').classList.add('hidden');
