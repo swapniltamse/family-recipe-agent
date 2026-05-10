@@ -29,8 +29,12 @@ members:
     story: "Home cook for 40 years. Makes chirote specifically for Ganpati visits and when her son leaves for the USA. It is the dish she makes when it matters most."
     tips:
       - "Thalipeeth gets a hole in the centre so it cooks through. No lid."
-      - "Sheera uses double the ghee you think it needs."
-      - "Always tastes before serving and adjusts salt at the end."
+      - "Sheera uses double the ghee you think it needs. Always ghee, never oil."
+      - "Rava is toasted in ghee first before anything else is added. Do not rush this step."
+      - "Jaggery is melted separately before adding to the sheera. Never added dry."
+      - "Banana goes in early so it cooks into the sheera, not added at the end as garnish."
+      - "Uses milk, not water. The milk makes it richer."
+      - "Always tastes before serving and adjusts at the end."
       - "Chirote dough is made from scratch with maida. Cardamom goes into the dough, not added later."
       - "Chirote are folded 5+ times for flakiness — more folds than most recipes suggest."
       - "A small amount of orange food colouring goes into the chirote dough. It is for colour only, not flavour."
@@ -41,8 +45,10 @@ members:
       - "No rava? She would not make thalipeeth that day."
       - "No orange food colouring for chirote? Skip it. The colour is aesthetic, not essential."
     avoid:
-      - "No chilli powder in sheera."
-      - "Never uses oil where ghee is called for."
+      - "Never uses oil where ghee is called for. Ghee is not optional in sheera."
+      - "No sugar in sheera if jaggery is available. Jaggery is the preference."
+      - "No water in sheera. Only milk."
+      - "Banana does not go in at the end. It goes in early so it cooks into the sheera."
       - "Chirote are not dusted with powdered sugar — they are soaked in syrup."
     corrections:
       - "AI often adds green chillies to thalipeeth. She does not."
