@@ -306,7 +306,7 @@ async function getRecipe() {
     incrementPromptCount();
     document.getElementById('result-actions').classList.remove('hidden');
     document.getElementById('followup-section').classList.remove('hidden');
-    document.getElementById('followup-input').focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
   } catch (err) {
     stopLoading();
