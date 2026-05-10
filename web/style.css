@@ -175,6 +175,27 @@ h1, h2, h3 {
   margin-bottom: 8px;
 }
 
+.input-prompts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.input-prompts li {
+  font-size: 0.82rem;
+  color: var(--mid);
+  padding-left: 14px;
+  position: relative;
+}
+.input-prompts li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: var(--saffron);
+}
+
 .input-example {
   font-size: 0.85rem;
   color: var(--mid);
@@ -297,10 +318,17 @@ input[type="text"]::placeholder { color: #B09080; }
 .loading {
   color: var(--mid);
   font-style: italic;
-  padding: 16px 0;
+  padding: 24px 0;
   text-align: center;
+  font-size: 1rem;
+  animation: loading-fade 1.8s ease-in-out infinite;
 }
 .loading.hidden { display: none; }
+
+@keyframes loading-fade {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
 
 .result-actions {
   margin-top: 24px;

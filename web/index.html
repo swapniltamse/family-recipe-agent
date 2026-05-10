@@ -29,13 +29,19 @@
       <button class="back-btn" id="back-to-picker">← All kitchens</button>
       <h2 id="member-heading" class="kitchen-title"></h2>
       <div class="accent-line"></div>
-      <p class="input-hint">Describe a dish from memory. An ingredient, a smell, a texture, an occasion. The more detail, the better.</p>
+      <p class="input-hint">What dish do you remember? The more you describe, the closer the recipe will be.</p>
+      <ul class="input-prompts">
+        <li>What spice or flavour stood out?</li>
+        <li>What was the texture — crispy, soft, thick gravy?</li>
+        <li>What occasion was it made for?</li>
+        <li>Why was this version different from others you have had?</li>
+      </ul>
       <p class="input-example">Try: <span class="example-text" onclick="document.getElementById('memory-input').value=this.textContent;document.getElementById('memory-input').focus()">"She made it on Sunday mornings. Just rava, onion, and coconut. No spices. Crispy on the outside, soft inside. We had it with curd."</span></p>
       <div class="input-form">
         <textarea
           id="memory-input"
           rows="5"
-          placeholder="Describe what you remember..."
+          placeholder="e.g. She made a dry potato sabzi — no gravy, mustard seeds, turmeric, a little lemon. We had it with chapati on weekday nights."
         ></textarea>
         <div class="optional-fields">
           <input type="text" id="people-count" placeholder="How many people? (optional)">
@@ -50,7 +56,7 @@
       <button class="back-btn" id="back-to-input">← Try a different dish</button>
       <h2 id="result-member-name" class="kitchen-title"></h2>
       <div class="accent-line"></div>
-      <div class="loading hidden" id="loading">Finding your recipe...</div>
+      <div class="loading hidden" id="loading"><span id="loading-msg"></span></div>
       <div id="recipe-content" class="recipe-content"></div>
       <div id="result-actions" class="result-actions hidden">
         <button class="action-btn" id="save-pdf-btn">Save as PDF</button>

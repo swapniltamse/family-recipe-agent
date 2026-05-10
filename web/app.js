@@ -3,6 +3,37 @@ let selectedMember = null;
 let currentRecipeText = '';
 let conversationHistory = [];
 
+/* ── Loading messages ── */
+const LOADING_MESSAGES = [
+  'Swayampakghar ughadte ahe... (Opening the kitchen...)',
+  'Aai la vicharato ahe... (Asking Aai...)',
+  'Masale shodhto ahe... (Finding the spices...)',
+  'Goda masala ahe ka? (Do we have goda masala?)',
+  'Ghee garam hote ahe... (Heating the ghee...)',
+  'Tadka tayyar hoto ahe... (Tadka is getting ready...)',
+  'Chul petti ahe... (The stove is lit...)',
+  'Recipe aathavato ahe... (Remembering the recipe...)',
+];
+let loadingInterval = null;
+
+function startLoading() {
+  const el = document.getElementById('loading-msg');
+  const loading = document.getElementById('loading');
+  let i = Math.floor(Math.random() * LOADING_MESSAGES.length);
+  el.textContent = LOADING_MESSAGES[i];
+  loading.classList.remove('hidden');
+  loadingInterval = setInterval(() => {
+    i = (i + 1) % LOADING_MESSAGES.length;
+    el.textContent = LOADING_MESSAGES[i];
+  }, 2200);
+}
+
+function stopLoading() {
+  clearInterval(loadingInterval);
+  loadingInterval = null;
+  document.getElementById('loading').classList.add('hidden');
+}
+
 /* ── Session limit ── */
 const SESSION_LIMIT = 10;
 
@@ -61,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 /* ── Kitchen Picker ── */
@@ -226,8 +258,8 @@ async function getRecipe() {
   document.getElementById('recipe-content').innerHTML = '';
   document.getElementById('result-actions').classList.add('hidden');
   document.getElementById('followup-section').classList.add('hidden');
-  document.getElementById('loading').classList.remove('hidden');
   showScreen('result');
+  startLoading();
 
   const btn = document.getElementById('get-recipe-btn');
   btn.disabled = true;
@@ -236,7 +268,7 @@ async function getRecipe() {
     const recipeEl = document.getElementById('recipe-content');
 
     const text = await fetchRecipe(conversationHistory, recipeEl);
-    document.getElementById('loading').classList.add('hidden');
+    stopLoading();
     currentRecipeText = text;
     conversationHistory.push({ role: 'assistant', content: text });
 
@@ -246,7 +278,7 @@ async function getRecipe() {
     document.getElementById('followup-input').focus();
 
   } catch (err) {
-    document.getElementById('loading').classList.add('hidden');
+    stopLoading();
     document.getElementById('recipe-content').textContent =
       friendlyError(err) === '__QUOTA__'
         ? showQuotaError(document.getElementById('recipe-content'))
