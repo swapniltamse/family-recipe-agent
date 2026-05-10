@@ -9,53 +9,44 @@ const FAMILY_DATA = {
     "name": "Mom",
     "skill_id": "mom",
     "location": "Dombivli",
-    "specialties": [
-      "rava thalipeeth",
-      "sheera",
-      "puran poli"
-    ],
+    "specialties": ["rava thalipeeth", "sheera", "puran poli"],
     "style": "Cooks by feel. No spices in thalipeeth. Just rava, onion, coconut. Extra ghee in sheera.",
-    "signature_dish": "Rava Thalipeeth"
+    "signature_dish": "Rava Thalipeeth",
+    "tags": ["Maharashtrian", "Breakfast", "Comfort food"]
   },
   {
     "name": "Thane Maushi",
     "skill_id": "thane-maushi",
     "location": "Thane",
-    "specialties": [
-      "batata bhaaji"
-    ],
+    "specialties": ["batata bhaaji"],
     "style": "Maharashtrian. Simple, precise. Perfectly dry batata bhaaji.",
-    "signature_dish": "Batata Bhaaji"
+    "signature_dish": "Batata Bhaaji",
+    "tags": ["Maharashtrian", "Vegetarian", "Dry sabzis", "Diwali chivda"]
   },
   {
     "name": "Shymal Maushi",
     "skill_id": "shymal-maushi",
-    "specialties": [
-      "puran poli"
-    ],
+    "specialties": ["puran poli"],
     "style": "Festival dishes. Generous. The puran poli shows up at every big occasion.",
-    "signature_dish": "Puran Poli"
+    "signature_dish": "Puran Poli",
+    "tags": ["Maharashtrian", "Festival", "Sweet"]
   },
   {
     "name": "Goregaon Maushi",
     "skill_id": "goregaon-maushi",
     "location": "Goregaon",
-    "specialties": [
-      "coastal fish curry",
-      "simple dishes with rich ingredients"
-    ],
+    "specialties": ["coastal fish curry", "simple dishes with rich ingredients"],
     "style": "Karwarian. Few ingredients, bold flavour. Never overcomplicates.",
-    "signature_dish": "Coastal Fish Curry"
+    "signature_dish": "Coastal Fish Curry",
+    "tags": ["Karwarian", "Coastal", "Fish"]
   },
   {
     "name": "Baby Maushi",
     "skill_id": "baby-maushi",
-    "specialties": [
-      "fish curry",
-      "chicken curry"
-    ],
+    "specialties": ["fish curry", "chicken curry"],
     "style": "Karwarian coastal cooking. Fish and chicken done better than anyone else.",
-    "signature_dish": "Fish Curry"
+    "signature_dish": "Fish Curry",
+    "tags": ["Karwarian", "Coastal", "Fish", "Chicken"]
   }
 ]
 };

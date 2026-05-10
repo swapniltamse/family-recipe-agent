@@ -136,7 +136,7 @@ function renderMemberCards() {
     card.innerHTML = `
       <div class="card-name">${member.name}</div>
       ${member.location ? `<div class="card-location">${member.location}</div>` : ''}
-      <div class="card-dish">${member.style.split('.')[0]}.</div>
+      <div class="card-tags">${(member.tags || []).map(t => `<span class="card-tag">${t}</span>`).join('')}</div>
     `;
     card.addEventListener('click', () => selectMember(member));
     grid.appendChild(card);
