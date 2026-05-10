@@ -35,7 +35,7 @@ function stopLoading() {
 }
 
 /* ── Session limit ── */
-const SESSION_LIMIT = 10;
+const SESSION_LIMIT = 25;
 
 function getPromptCount() {
   return parseInt(sessionStorage.getItem('recipeCount') || '0', 10);
