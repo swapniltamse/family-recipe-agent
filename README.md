@@ -94,6 +94,7 @@ Your family URL is live. Share it with family members. No installs, no accounts.
 Each recipe request costs roughly **$0.002–0.003** using Claude Haiku (the default model). That is about $0.05 per user if they use all 25 recipes in a day.
 
 The demo at [familyrecipe.swapniltamse.com](https://familyrecipe.swapniltamse.com) is limited to **25 recipes per day** per visitor to keep it free for everyone.
+<img width="370" height="345" alt="bai2" src="https://github.com/user-attachments/assets/bd247aaf-4a61-48dd-88cb-4bb7a6ee86c5" />
 
 When you build your own version, you control the limit. Set it in `web/app.js`:
 
