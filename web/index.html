@@ -36,8 +36,7 @@
         <li>What occasion was it made for?</li>
         <li>Why was this version different from others you have had?</li>
       </ul>
-      <p class="input-example">Try: <span class="example-text" onclick="document.getElementById('memory-input').value=this.textContent;document.getElementById('memory-input').focus()">"She made it on Sunday mornings. Just rava, onion, and coconut. No spices. Crispy on the outside, soft inside. We had it with curd."</span></p>
-      <div class="input-form">
+<div class="input-form">
         <textarea
           id="memory-input"
           rows="5"
@@ -61,6 +60,7 @@
       <div id="result-actions" class="result-actions hidden">
         <button class="action-btn" id="save-pdf-btn">Save as PDF</button>
         <button class="action-btn" id="save-txt-btn">Save as TXT</button>
+        <button class="action-btn hidden" id="save-drive-btn">Save to Drive</button>
         <button class="secondary-btn" id="try-another-btn">Try another kitchen</button>
       </div>
       <div id="followup-section" class="followup-section hidden">
@@ -77,7 +77,16 @@
   <footer class="site-footer">Made with love by <a href="https://www.linkedin.com/in/swapniltamse" target="_blank">Swapnil Tamse</a></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
-  <script>window.CONFIG = { model: 'claude-haiku-4-5-20251001' };</script>
+  <script src="https://accounts.google.com/gsi/client" async></script>
+  <script>
+    window.CONFIG = {
+      model: 'claude-haiku-4-5-20251001',
+      // googleClientId: 'YOUR-GOOGLE-OAUTH-CLIENT-ID',
+      // gaId: 'G-XXXXXXXXXX',
+    };
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+  </script>
   <script src="config.js" onerror="void(0)"></script>
   <script src="family-data.js"></script>
   <script src="app.js"></script>

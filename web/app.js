@@ -77,6 +77,62 @@ function toggleTheme() {
   }
 }
 
+/* ── Google Analytics ── */
+function initAnalytics() {
+  if (!CONFIG.gaId) return;
+  const script = document.createElement('script');
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${CONFIG.gaId}`;
+  script.async = true;
+  document.head.appendChild(script);
+  gtag('js', new Date());
+  gtag('config', CONFIG.gaId);
+}
+
+/* ── Google Drive ── */
+async function saveToDrive() {
+  if (!CONFIG.googleClientId) return;
+  const btn = document.getElementById('save-drive-btn');
+  btn.disabled = true;
+  btn.textContent = 'Connecting...';
+
+  const tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CONFIG.googleClientId,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    callback: async (response) => {
+      if (response.error) {
+        btn.disabled = false;
+        btn.textContent = 'Save to Drive';
+        return;
+      }
+      await uploadToDrive(response.access_token);
+      btn.disabled = false;
+    }
+  });
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+
+async function uploadToDrive(accessToken) {
+  const btn = document.getElementById('save-drive-btn');
+  btn.textContent = 'Saving...';
+
+  const content = document.getElementById('recipe-content').innerText;
+  const memberSlug = selectedMember?.skill_id || selectedMember?.name.toLowerCase().replace(/\s+/g, '-') || 'recipe';
+  const filename = `${memberSlug}-recipe.txt`;
+
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify({ name: filename, mimeType: 'text/plain' })], { type: 'application/json' }));
+  form.append('file', new Blob([content], { type: 'text/plain' }));
+
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: form
+  });
+
+  btn.textContent = res.ok ? 'Saved!' : 'Save to Drive';
+  if (res.ok) setTimeout(() => { btn.textContent = 'Save to Drive'; }, 2500);
+}
+
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('family-name').textContent = FAMILY_DATA.familyName;
@@ -85,7 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
   bindNavigation();
   updateCreditsBadge();
   initTheme();
+  initAnalytics();
   document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+  if (CONFIG.googleClientId) {
+    document.getElementById('save-drive-btn').classList.remove('hidden');
+    document.getElementById('save-drive-btn').addEventListener('click', saveToDrive);
+  }
 });
 
 /* ── Screen management ── */
