@@ -1,5 +1,6 @@
 web/config.js
 family-profile.yaml
+CLAUDE.md
 server.py
 __pycache__/
 *.pyc
