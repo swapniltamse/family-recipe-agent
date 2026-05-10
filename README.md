@@ -32,8 +32,8 @@ Browser → /api/messages (Vercel or server.py) → Anthropic API
 
 **1. Clone the repo**
 ```bash
-git clone https://github.com/swapniltamse/mhardolkar-family-recipe-agent.git
-cd mhardolkar-family-recipe-agent
+git clone https://github.com/swapniltamse/family-recipe-agent.git
+cd family-recipe-agent
 ```
 
 **2. Install PyYAML**

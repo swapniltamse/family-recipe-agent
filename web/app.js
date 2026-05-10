@@ -214,7 +214,7 @@ function showQuotaError(targetEl) {
       <img src="bai.jpg" alt="Itne paise mein itna hi milega" class="quota-img">
       <p class="quota-text">This demo has reached its limit for today.</p>
       <p class="quota-sub">Come back tomorrow, or build your own version for your family.</p>
-      <a href="https://github.com/swapniltamse/mhardolkar-family-recipe-agent" class="quota-link" target="_blank">Clone on GitHub</a>
+      <a href="https://github.com/swapniltamse/family-recipe-agent" class="quota-link" target="_blank">Clone on GitHub</a>
     </div>
   `;
 }
@@ -267,7 +267,7 @@ async function getRecipe() {
   if (getPromptCount() >= SESSION_LIMIT) {
     document.getElementById('result-member-name').textContent = selectedMember.name + "'s Kitchen";
     document.getElementById('recipe-content').textContent =
-      `This demo allows ${SESSION_LIMIT} recipes per session. To use it for your own family, clone the project and add your own Claude API key:\ngithub.com/swapniltamse/mhardolkar-family-recipe-agent`;
+      `This demo allows ${SESSION_LIMIT} recipes per session. To use it for your own family, clone the project and add your own Claude API key:\ngithub.com/swapniltamse/family-recipe-agent`;
     document.getElementById('result-actions').classList.add('hidden');
     document.getElementById('followup-section').classList.add('hidden');
     document.getElementById('loading').classList.add('hidden');
