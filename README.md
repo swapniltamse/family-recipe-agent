@@ -89,6 +89,22 @@ Your family URL is live. Share it with family members. No installs, no accounts.
 
 ---
 
+## Cost and limits
+
+Each recipe request costs roughly **$0.002–0.003** using Claude Haiku (the default model). That is about $0.05 per user if they use all 25 recipes in a day.
+
+The demo at [familyrecipe.swapniltamse.com](https://familyrecipe.swapniltamse.com) is limited to **25 recipes per day** per visitor to keep it free for everyone.
+
+When you build your own version, you control the limit. Set it in `web/app.js`:
+
+```js
+const SESSION_LIMIT = 25; // change to whatever suits your family
+```
+
+To protect against runaway costs, set a monthly spend cap in [Anthropic Console](https://console.anthropic.com) under Billing. A cap of $10–20/month is plenty for a family app.
+
+---
+
 ## Features
 
 - **Kitchen picker**: each family member gets her own card with cuisine tags
