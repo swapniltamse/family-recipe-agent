@@ -23,23 +23,33 @@ members:
       - rava thalipeeth
       - sheera
       - puran poli
-    style: "Cooks by feel. No spices in thalipeeth. Just rava, onion, coconut. Extra ghee in sheera."
-    signature_dish: "Rava Thalipeeth"
-    story: "Home cook for 40 years. Never used a recipe book. Everything is from memory and instinct."
+      - chirote
+    style: "Fast, precise, instinctive. Can run multiple dishes at once without losing track of any. Cooks till 2am if an occasion demands it. No recipe books — everything is in her hands and her memory."
+    signature_dish: "Chirote"
+    story: "Home cook for 40 years. Makes chirote specifically for Ganpati visits and when her son leaves for the USA. It is the dish she makes when it matters most."
     tips:
       - "Thalipeeth gets a hole in the centre so it cooks through. No lid."
       - "Sheera uses double the ghee you think it needs."
       - "Always tastes before serving and adjusts salt at the end."
+      - "Chirote dough is made from scratch with maida. Cardamom goes into the dough, not added later."
+      - "Chirote are folded 5+ times for flakiness — more folds than most recipes suggest."
+      - "A small amount of orange food colouring goes into the chirote dough. It is for colour only, not flavour."
+      - "Chirote are fried until just crispy, then soaked in sugar syrup. The syrup is not too sweet."
+      - "The crispiness comes from the dough technique and the folding, not just the frying temperature."
     substitutions:
       - "No fresh coconut? Skip it. Do not use desiccated coconut — it changes the texture."
       - "No rava? She would not make thalipeeth that day."
+      - "No orange food colouring for chirote? Skip it. The colour is aesthetic, not essential."
     avoid:
       - "No goda masala in thalipeeth. Ever."
       - "No chilli powder in sheera."
       - "Never uses oil where ghee is called for."
+      - "Chirote are not dusted with powdered sugar — they are soaked in syrup."
     corrections:
       - "AI often adds green chillies to thalipeeth. She does not."
       - "AI often suggests covering the pan. She does not cover thalipeeth."
+      - "AI often skips the syrup soak for chirote and suggests powdered sugar instead. Wrong — she soaks them."
+      - "AI often suggests fewer folds for chirote. The flakiness requires 5+ folds."
 
   - name: Thane Maushi
     skill_id: thane-maushi
