@@ -88,49 +88,22 @@ function initAnalytics() {
   gtag('config', CONFIG.gaId);
 }
 
-/* ── Google Drive ── */
-async function saveToDrive() {
-  if (!CONFIG.googleClientId) return;
-  const btn = document.getElementById('save-drive-btn');
-  btn.disabled = true;
-  btn.textContent = 'Connecting...';
+/* ── Share ── */
+async function shareApp() {
+  const btn = document.getElementById('share-btn');
+  const url = 'https://familyrecipe.swapniltamse.com';
+  const text = 'Describe a dish from memory. Get the recipe back. Built for the Mhardolkar family.';
 
-  const tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CONFIG.googleClientId,
-    scope: 'https://www.googleapis.com/auth/drive.file',
-    callback: async (response) => {
-      if (response.error) {
-        btn.disabled = false;
-        btn.textContent = 'Save to Drive';
-        return;
-      }
-      await uploadToDrive(response.access_token);
-      btn.disabled = false;
-    }
-  });
-  tokenClient.requestAccessToken({ prompt: '' });
-}
-
-async function uploadToDrive(accessToken) {
-  const btn = document.getElementById('save-drive-btn');
-  btn.textContent = 'Saving...';
-
-  const content = document.getElementById('recipe-content').innerText;
-  const memberSlug = selectedMember?.skill_id || selectedMember?.name.toLowerCase().replace(/\s+/g, '-') || 'recipe';
-  const filename = `${memberSlug}-recipe.txt`;
-
-  const form = new FormData();
-  form.append('metadata', new Blob([JSON.stringify({ name: filename, mimeType: 'text/plain' })], { type: 'application/json' }));
-  form.append('file', new Blob([content], { type: 'text/plain' }));
-
-  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${accessToken}` },
-    body: form
-  });
-
-  btn.textContent = res.ok ? 'Saved!' : 'Save to Drive';
-  if (res.ok) setTimeout(() => { btn.textContent = 'Save to Drive'; }, 2500);
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'Family Recipe Agent', text, url });
+    } catch (_) {}
+  } else {
+    await navigator.clipboard.writeText(url);
+    const original = btn.textContent;
+    btn.textContent = 'Link copied!';
+    setTimeout(() => { btn.textContent = original; }, 2000);
+  }
 }
 
 /* ── Init ── */
@@ -143,10 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initAnalytics();
   document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-  if (CONFIG.googleClientId) {
-    document.getElementById('save-drive-btn').classList.remove('hidden');
-    document.getElementById('save-drive-btn').addEventListener('click', saveToDrive);
-  }
+  document.getElementById('share-btn').addEventListener('click', shareApp);
 });
 
 /* ── Screen management ── */
