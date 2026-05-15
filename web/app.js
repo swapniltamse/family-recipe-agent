@@ -162,10 +162,24 @@ function bindNavigation() {
 
 /* ── System prompt builder ── */
 function buildSystemPrompt(member) {
+  const storyLine = member.story ? `\n\nBackground: ${member.story}` : '';
+  const tipsSection = member.tips?.length
+    ? `\n\nHer known tips:\n- ${member.tips.join('\n- ')}`
+    : '';
+  const avoidSection = member.avoid?.length
+    ? `\n\nWhat she never does:\n- ${member.avoid.join('\n- ')}`
+    : '';
+  const substitutionsSection = member.substitutions?.length
+    ? `\n\nHer substitutions:\n- ${member.substitutions.join('\n- ')}`
+    : '';
+  const correctionsSection = member.corrections?.length
+    ? `\n\nWhat AI commonly gets wrong about her cooking (do NOT do these):\n- ${member.corrections.join('\n- ')}`
+    : '';
+
   return `You are a recipe assistant trained on ${member.name}'s kitchen.
 Cuisine: ${FAMILY_DATA.cuisines.join(', ')}
 Specialties: ${member.specialties.join(', ')}
-Cooking style: ${member.style}
+Cooking style: ${member.style}${storyLine}${tipsSection}${avoidSection}${substitutionsSection}${correctionsSection}
 
 The user will describe a dish from memory. Reconstruct the full recipe from that description.
 If the description is vague, state your assumptions in one short line at the top.
