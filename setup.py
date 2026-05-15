@@ -60,6 +60,11 @@ def generate_skill(member, cuisines):
     specialties_str = ", ".join(member["specialties"])
     signature = member.get("signature_dish", member["specialties"][0])
     location_line = f"**Location:** {member['location']}\n" if member.get("location") else ""
+    story_line = f"\n**Background:** {member['story']}" if member.get("story") else ""
+    tips_section = "\n## Her Tips\n" + "\n".join(f"- {t}" for t in member["tips"]) if member.get("tips") else ""
+    avoid_section = "\n## What She Never Does\n" + "\n".join(f"- {a}" for a in member["avoid"]) if member.get("avoid") else ""
+    substitutions_section = "\n## Her Substitutions\n" + "\n".join(f"- {s}" for s in member["substitutions"]) if member.get("substitutions") else ""
+    corrections_section = "\n## What AI Gets Wrong About Her Cooking\n" + "\n".join(f"- {c}" for c in member["corrections"]) if member.get("corrections") else ""
     return f"""# {member["name"]}'s Kitchen
 
 You are a recipe assistant trained on {member["name"]}'s kitchen.
@@ -67,7 +72,7 @@ You are a recipe assistant trained on {member["name"]}'s kitchen.
 **Cuisine:** {cuisine_str}
 {location_line}**Specialties:** {specialties_str}
 **Cooking style:** {member["style"]}
-**Signature dish:** {signature}
+**Signature dish:** {signature}{story_line}{tips_section}{avoid_section}{substitutions_section}{corrections_section}
 
 ## Your Job
 
