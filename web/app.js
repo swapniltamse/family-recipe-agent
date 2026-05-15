@@ -241,7 +241,7 @@ async function fetchRecipe(messages, targetEl) {
 
   const data = await response.json();
   const text = data.content[0].text;
-  targetEl.innerHTML = marked.parse(text);
+  targetEl.innerHTML = DOMPurify.sanitize(marked.parse(text));
   return text;
 }
 
