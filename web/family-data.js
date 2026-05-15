@@ -9,44 +9,157 @@ const FAMILY_DATA = {
     "name": "Mom",
     "skill_id": "mom",
     "location": "Dombivli",
-    "specialties": ["rava thalipeeth", "sheera", "puran poli"],
-    "style": "Cooks by feel. No spices in thalipeeth. Just rava, onion, coconut. Extra ghee in sheera.",
-    "signature_dish": "Rava Thalipeeth",
-    "tags": ["Maharashtrian", "Breakfast", "Comfort food"]
+    "specialties": [
+      "rava thalipeeth",
+      "sheera",
+      "puran poli",
+      "chirote"
+    ],
+    "style": "Fast, precise, instinctive. Can run multiple dishes at once without losing track of any. Cooks till 2am if an occasion demands it. No recipe books — everything is in her hands and her memory.",
+    "signature_dish": "Chirote",
+    "story": "Home cook for 40 years. Makes chirote specifically for Ganpati visits and when her son leaves for the USA. It is the dish she makes when it matters most.",
+    "tips": [
+      "Thalipeeth gets a hole in the centre so it cooks through. No lid.",
+      "Sheera uses double the ghee you think it needs. Always ghee, never oil.",
+      "Rava is toasted in ghee first before anything else is added. Do not rush this step.",
+      "Jaggery is melted separately before adding to the sheera. Never added dry.",
+      "Banana goes in early so it cooks into the sheera, not added at the end as garnish.",
+      "Uses milk, not water. The milk makes it richer.",
+      "Always tastes before serving and adjusts at the end.",
+      "Chirote dough is made from scratch with maida. Cardamom goes into the dough, not added later.",
+      "Chirote are folded 5+ times for flakiness — more folds than most recipes suggest.",
+      "A small amount of orange food colouring goes into the chirote dough. It is for colour only, not flavour.",
+      "Chirote are fried until just crispy, then soaked in sugar syrup. The syrup is not too sweet.",
+      "The crispiness comes from the dough technique and the folding, not just the frying temperature."
+    ],
+    "substitutions": [
+      "No fresh coconut? Skip it. Do not use desiccated coconut — it changes the texture.",
+      "No rava? She would not make thalipeeth that day.",
+      "No orange food colouring for chirote? Skip it. The colour is aesthetic, not essential."
+    ],
+    "avoid": [
+      "Never uses oil where ghee is called for. Ghee is not optional in sheera.",
+      "No sugar in sheera if jaggery is available. Jaggery is the preference.",
+      "No water in sheera. Only milk.",
+      "Banana does not go in at the end. It goes in early so it cooks into the sheera.",
+      "Chirote are not dusted with powdered sugar — they are soaked in syrup."
+    ],
+    "corrections": [
+      "AI often adds green chillies to thalipeeth. She does not.",
+      "AI often suggests covering the pan. She does not cover thalipeeth.",
+      "AI often skips the syrup soak for chirote and suggests powdered sugar instead. Wrong — she soaks them.",
+      "AI often suggests fewer folds for chirote. The flakiness requires 5+ folds."
+    ]
   },
   {
     "name": "Thane Maushi",
     "skill_id": "thane-maushi",
     "location": "Thane",
-    "specialties": ["batata bhaaji"],
+    "specialties": [
+      "batata bhaaji",
+      "diwali chivda"
+    ],
     "style": "Maharashtrian. Simple, precise. Perfectly dry batata bhaaji.",
     "signature_dish": "Batata Bhaaji",
-    "tags": ["Maharashtrian", "Vegetarian", "Dry sabzis", "Diwali chivda"]
+    "story": "Taught herself to cook after marriage. Precision is her thing — same dish, same taste, every time.",
+    "tips": [
+      "Batata bhaaji must be completely dry. No moisture. Cook on low flame at the end.",
+      "Mustard seeds must splutter fully before adding anything else.",
+      "Diwali chivda is made in bulk and stored — the resting time improves the flavour."
+    ],
+    "substitutions": [
+      "No curry leaves? Delay the dish. Curry leaves are not optional."
+    ],
+    "avoid": [
+      "No onion in batata bhaaji.",
+      "No gravy. Ever. If there is liquid, it is not done yet."
+    ],
+    "corrections": [
+      "AI often adds onion to batata bhaaji. She does not use onion.",
+      "AI often adds water. This dish must stay completely dry."
+    ]
   },
   {
     "name": "Shymal Maushi",
     "skill_id": "shymal-maushi",
-    "specialties": ["puran poli"],
+    "specialties": [
+      "puran poli",
+      "festival sweets"
+    ],
     "style": "Festival dishes. Generous. The puran poli shows up at every big occasion.",
     "signature_dish": "Puran Poli",
-    "tags": ["Maharashtrian", "Festival", "Sweet"]
+    "story": "Cooks for occasions, not weekdays. Everything she makes is in large quantities and meant to be shared.",
+    "tips": [
+      "Puran must be cooked until it leaves the sides of the pan completely.",
+      "The dough needs to rest for at least 30 minutes.",
+      "Always served with warm milk or aamras."
+    ],
+    "substitutions": [
+      "No chana dal? Do not attempt puran poli. It is the dish."
+    ],
+    "avoid": [
+      "No shortcuts on the puran cooking time. Undercooked puran breaks the poli.",
+      "Never skips the ghee on top when serving."
+    ],
+    "corrections": [
+      "AI often suggests jaggery alternatives. She uses only jaggery, never sugar."
+    ]
   },
   {
     "name": "Goregaon Maushi",
     "skill_id": "goregaon-maushi",
     "location": "Goregaon",
-    "specialties": ["coastal fish curry", "simple dishes with rich ingredients"],
+    "specialties": [
+      "coastal fish curry",
+      "simple dishes with rich ingredients"
+    ],
     "style": "Karwarian. Few ingredients, bold flavour. Never overcomplicates.",
     "signature_dish": "Coastal Fish Curry",
-    "tags": ["Karwarian", "Coastal", "Fish"]
+    "story": "Karwarian roots. Grew up eating coastal food. Knows which fish is right for which dish.",
+    "tips": [
+      "Coconut milk goes in at the end, never boiled hard — it splits.",
+      "The fish is added last and cooked only until done. Overcooking ruins it.",
+      "Kokum is the souring agent. Not tamarind."
+    ],
+    "substitutions": [
+      "No kokum? Use a small amount of raw mango. Not tamarind.",
+      "No fresh coconut? Coconut milk from a can works for the curry, not for chutneys."
+    ],
+    "avoid": [
+      "No garam masala in fish curry.",
+      "No tomato. Karwarian fish curry does not use tomato."
+    ],
+    "corrections": [
+      "AI almost always adds tomato and garam masala to fish curry. Neither belongs here.",
+      "AI uses tamarind. She uses kokum."
+    ]
   },
   {
     "name": "Baby Maushi",
     "skill_id": "baby-maushi",
-    "specialties": ["fish curry", "chicken curry"],
+    "specialties": [
+      "fish curry",
+      "chicken curry"
+    ],
     "style": "Karwarian coastal cooking. Fish and chicken done better than anyone else.",
     "signature_dish": "Fish Curry",
-    "tags": ["Karwarian", "Coastal", "Fish", "Chicken"]
+    "story": "Coastal Karwarian cook. The fish and chicken are the stars — everything else supports them.",
+    "tips": [
+      "Chicken is always marinated overnight. Never less.",
+      "The masala is ground fresh. No store-bought masala powder.",
+      "Cooks on a low flame for a long time. Patience is the technique."
+    ],
+    "substitutions": [
+      "No fresh ground masala? She would postpone the dish."
+    ],
+    "avoid": [
+      "No shortcuts on marination time.",
+      "No cream or butter. This is not a restaurant dish."
+    ],
+    "corrections": [
+      "AI often suggests cream or yogurt in the curry. She uses neither.",
+      "AI often uses pre-made masala powders. Everything is ground fresh."
+    ]
   }
 ]
 };
