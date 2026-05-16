@@ -108,6 +108,16 @@ h1, h2, h3 {
   font-size: 1rem;
 }
 
+.story {
+  font-family: 'Playfair Display', Georgia, serif;
+  text-align: center;
+  color: var(--mid);
+  font-size: 1rem;
+  line-height: 1.75;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
 .explainer {
   text-align: center;
   color: var(--dark);
