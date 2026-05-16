@@ -143,7 +143,7 @@ h1, h2, h3 {
 
 .member-card:last-child:nth-child(odd) {
   grid-column: 1 / -1;
-  max-width: calc(50% - 8px);
+  width: calc(50% - 8px);
   margin: 0 auto;
 }
 
