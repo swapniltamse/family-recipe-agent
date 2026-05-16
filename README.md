@@ -43,7 +43,16 @@ pip install pyyaml
 
 **3. Fill in your family**
 
-Copy `family-profile.example.yaml` to `family-profile.yaml` and edit it. Add each family member: their name, location, specialties, cooking style, and tags.
+Copy `family-profile.example.yaml` to `family-profile.yaml` and edit it. The more detail you add per member, the more accurate the recipes.
+
+Core fields: `name`, `skill_id`, `location`, `specialties`, `style`, `signature_dish`
+
+Optional but high-impact fields:
+- `story` — who this person is, what cooking means to them
+- `tips` — techniques specific to their kitchen
+- `avoid` — things they never do that generic recipes often suggest
+- `substitutions` — how they handle missing ingredients
+- `corrections` — what AI commonly gets wrong about their cooking (injected as explicit instructions into the system prompt)
 
 **4. Generate the web config**
 ```bash
@@ -111,6 +120,7 @@ To protect against runaway costs, set a monthly spend cap in [Anthropic Console]
 - **Kitchen picker**: each family member gets her own card with cuisine tags
 - **Memory input**: describe a dish, optionally add serving size and occasion
 - **Recipe output**: formatted with ingredients, method, serving suggestions, and a personal tip from that kitchen
+- **AI corrections**: tips, avoid, and corrections fields are injected into the system prompt — the AI is explicitly told what each cook never does and what generic recipes always get wrong
 - **Follow-up chat**: adjust the recipe inline, swap ingredients, change quantities, simplify steps
 - **Save as PDF**: browser print dialog, formatted for paper
 - **Save as TXT**: plain text download
@@ -134,3 +144,11 @@ If you use Claude Code, the generated skills let you query recipes directly in y
 Your family profile stays on your machine. Recipe queries go to Anthropic's API with your key. See [Anthropic's privacy policy](https://www.anthropic.com/privacy).
 
 The API key is stored as an environment variable. It never touches the browser or git.
+
+---
+
+## Security
+
+- API key is injected server-side (`/api/messages` proxy). Never sent to the browser.
+- All AI-generated HTML is sanitised with [DOMPurify](https://github.com/cure53/DOMPurify) before DOM injection.
+- CDN scripts are pinned to specific versions with SRI integrity hashes.
