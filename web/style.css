@@ -508,6 +508,80 @@ input[type="text"]::placeholder { color: #B09080; }
 }
 .site-footer a:hover { text-decoration: underline; }
 
+/* ── Cookbook ── */
+.cookbook-nav-btn {
+  display: block;
+  margin: 28px auto 0;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-size: 0.85rem;
+  color: var(--mid);
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s;
+}
+.cookbook-nav-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+.cookbook-entry {
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+
+.cookbook-entry-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.cookbook-member {
+  font-size: 0.8rem;
+  color: var(--terracotta);
+  font-weight: 600;
+}
+
+.cookbook-date {
+  font-size: 0.75rem;
+  color: var(--mid);
+  opacity: 0.7;
+}
+
+.cookbook-dish {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--dark);
+  margin-bottom: 12px;
+}
+
+.cookbook-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.cookbook-actions .action-btn,
+.cookbook-actions .secondary-btn {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+
+.cookbook-empty {
+  color: var(--mid);
+  font-style: italic;
+  text-align: center;
+  padding: 32px 0;
+  font-size: 0.9rem;
+}
+
+.action-btn.saved {
+  background: var(--border);
+  color: var(--mid);
+  cursor: default;
+}
+
 /* ── Print stylesheet ── */
 @media print {
   body { background: #fff; padding: 0; font-size: 12pt; }

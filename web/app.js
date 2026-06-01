@@ -2,6 +2,7 @@
 let selectedMember = null;
 let currentRecipeText = '';
 let conversationHistory = [];
+let currentRecipeId = null;  // set when current recipe is saved to cookbook
 
 /* ── Loading messages ── */
 const LOADING_MESSAGES = [
@@ -54,6 +55,108 @@ function updateCreditsBadge() {
   badge.className = 'credits-badge';
   if (remaining <= 2) badge.classList.add('critical');
   else if (remaining <= 5) badge.classList.add('low');
+}
+
+/* ── Cookbook (localStorage) ── */
+function getCookbook() {
+  try { return JSON.parse(localStorage.getItem('cookbook') || '[]'); } catch { return []; }
+}
+
+function saveCookbook(entries) {
+  localStorage.setItem('cookbook', JSON.stringify(entries));
+}
+
+function extractDishName(text) {
+  const m = text.match(/^##\s+(.+)/m);
+  return m ? m[1].trim() : 'Recipe';
+}
+
+function addToCookbook() {
+  if (!currentRecipeText || !selectedMember) return;
+  const entry = {
+    id: Date.now(),
+    member: selectedMember.name,
+    dish: extractDishName(currentRecipeText),
+    text: currentRecipeText,
+    savedAt: new Date().toISOString().split('T')[0],
+  };
+  const cookbook = getCookbook();
+  cookbook.unshift(entry);
+  saveCookbook(cookbook);
+  currentRecipeId = entry.id;
+  updateSaveCookbookBtn();
+  updateCookbookNav();
+}
+
+function deleteFromCookbook(id) {
+  saveCookbook(getCookbook().filter(e => e.id !== id));
+  if (currentRecipeId === id) {
+    currentRecipeId = null;
+    updateSaveCookbookBtn();
+  }
+  updateCookbookNav();
+  renderCookbook();
+}
+
+function updateSaveCookbookBtn() {
+  const btn = document.getElementById('save-cookbook-btn');
+  if (!btn) return;
+  if (currentRecipeId) {
+    btn.textContent = 'Saved';
+    btn.disabled = true;
+    btn.classList.add('saved');
+  } else {
+    btn.textContent = 'Save to cookbook';
+    btn.disabled = false;
+    btn.classList.remove('saved');
+  }
+}
+
+function updateCookbookNav() {
+  const cookbook = getCookbook();
+  const btn = document.getElementById('cookbook-btn');
+  const count = document.getElementById('cookbook-count');
+  if (!btn || !count) return;
+  count.textContent = cookbook.length;
+  btn.style.display = cookbook.length > 0 ? 'block' : 'none';
+}
+
+function renderCookbook() {
+  const list = document.getElementById('cookbook-list');
+  const cookbook = getCookbook();
+  if (cookbook.length === 0) {
+    list.innerHTML = '<p class="cookbook-empty">No saved recipes yet. Get a recipe and hit "Save to cookbook."</p>';
+    return;
+  }
+  list.innerHTML = cookbook.map(entry => `
+    <div class="cookbook-entry">
+      <div class="cookbook-entry-meta">
+        <span class="cookbook-member">${entry.member}</span>
+        <span class="cookbook-date">${entry.savedAt}</span>
+      </div>
+      <div class="cookbook-dish">${entry.dish}</div>
+      <div class="cookbook-actions">
+        <button class="action-btn" onclick="viewSavedRecipe(${entry.id})">View</button>
+        <button class="secondary-btn" onclick="deleteFromCookbook(${entry.id})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function viewSavedRecipe(id) {
+  const entry = getCookbook().find(e => e.id === id);
+  if (!entry) return;
+  currentRecipeText = entry.text;
+  currentRecipeId = entry.id;
+  const memberMatch = FAMILY_DATA.members.find(m => m.name === entry.member);
+  selectedMember = memberMatch || { name: entry.member };
+  document.getElementById('result-member-name').textContent = entry.member + "'s Kitchen";
+  const recipeEl = document.getElementById('recipe-content');
+  recipeEl.innerHTML = DOMPurify.sanitize(marked.parse(entry.text));
+  document.getElementById('result-actions').classList.remove('hidden');
+  document.getElementById('followup-section').classList.add('hidden');
+  updateSaveCookbookBtn();
+  showScreen('result');
 }
 
 /* ── Dark mode ── */
@@ -113,10 +216,15 @@ document.addEventListener('DOMContentLoaded', () => {
   renderMemberCards();
   bindNavigation();
   updateCreditsBadge();
+  updateCookbookNav();
   initTheme();
   initAnalytics();
   document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
   document.getElementById('share-btn').addEventListener('click', shareApp);
+  document.getElementById('cookbook-btn').addEventListener('click', () => {
+    renderCookbook();
+    showScreen('cookbook');
+  });
 });
 
 /* ── Screen management ── */
@@ -158,6 +266,7 @@ function bindNavigation() {
   document.getElementById('back-to-picker').addEventListener('click', () => showScreen('picker'));
   document.getElementById('back-to-input').addEventListener('click', () => showScreen('input'));
   document.getElementById('try-another-btn').addEventListener('click', () => showScreen('picker'));
+  document.getElementById('back-to-picker-from-cookbook').addEventListener('click', () => showScreen('picker'));
 }
 
 /* ── System prompt builder ── */
@@ -240,7 +349,7 @@ async function fetchRecipe(messages, targetEl) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       model: CONFIG.model,
-      max_tokens: 2048,
+      max_tokens: 1024,
       system: buildSystemPrompt(selectedMember),
       messages
     })
@@ -269,6 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('followup-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') sendFollowUp();
   });
+  document.getElementById('save-cookbook-btn').addEventListener('click', addToCookbook);
 });
 
 async function getRecipe() {
@@ -300,6 +410,7 @@ async function getRecipe() {
 
   document.getElementById('result-member-name').textContent = selectedMember.name + "'s Kitchen";
   currentRecipeText = '';
+  currentRecipeId = null;
   document.getElementById('recipe-content').innerHTML = '';
   document.getElementById('result-actions').classList.add('hidden');
   document.getElementById('followup-section').classList.add('hidden');
@@ -318,6 +429,7 @@ async function getRecipe() {
     conversationHistory.push({ role: 'assistant', content: text });
 
     incrementPromptCount();
+    updateSaveCookbookBtn();
     document.getElementById('result-actions').classList.remove('hidden');
     document.getElementById('followup-section').classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
