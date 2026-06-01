@@ -35,6 +35,7 @@
       <p class="explainer">Describe a dish from memory. Get the recipe back.</p>
       <p class="disclaimer">Recipes are AI reconstructions from your configured family memory. Adjust to taste and trust what you remember over what it says.</p>
       <div id="member-cards" class="cards-grid"></div>
+      <button id="cookbook-btn" class="cookbook-nav-btn" style="display:none">My Cookbook (<span id="cookbook-count">0</span>)</button>
     </div>
 
     <!-- Screen 2: Memory Input -->
@@ -71,6 +72,7 @@
       <div class="loading hidden" id="loading"><span id="loading-msg"></span></div>
       <div id="recipe-content" class="recipe-content"></div>
       <div id="result-actions" class="result-actions hidden">
+        <button class="action-btn" id="save-cookbook-btn">Save to cookbook</button>
         <button class="action-btn" id="save-pdf-btn">Save as PDF</button>
         <button class="action-btn" id="save-txt-btn">Save as TXT</button>
         <button class="secondary-btn" id="share-btn">Share this app</button>
@@ -83,6 +85,14 @@
           <button class="followup-btn" id="followup-btn">Ask</button>
         </div>
       </div>
+    </div>
+
+    <!-- Screen 4: Cookbook -->
+    <div id="screen-cookbook" class="screen">
+      <button class="back-btn" id="back-to-picker-from-cookbook">← All kitchens</button>
+      <h2 class="kitchen-title">My Cookbook</h2>
+      <div class="accent-line"></div>
+      <div id="cookbook-list"></div>
     </div>
 
   </div>
